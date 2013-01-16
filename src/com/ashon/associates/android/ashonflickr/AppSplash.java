@@ -1,8 +1,12 @@
 package com.ashon.associates.android.ashonflickr;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.ashon.associates.android.ashonflickr.FlickrApi.FlickrImage;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -20,13 +24,15 @@ public class AppSplash extends ApplicaitonActivity {
 	}
 
 	private void doSplash() {
-		// Get Flickr Api Obj
-		FlickrApi flickrApiObj	= this.getFlickrApi();
-		// Fetch recent images
-		String jsonFeed	= flickrApiObj.getTopImages();
-		
-		// lunch off gallery activity
-		launchGallery(jsonFeed);
+		if (isNetworkAvailable()) {
+			// Initialize AsyncTask
+			AsyncTask<String, Void, ArrayList<FlickrImage>> asyncTask	= new ImagesDownloaderTask();
+			// Get Flickr Api Obj
+			// Fetch recent images
+			
+			asyncTask.execute("");
+			// lunch off gallery activity
+			launchGallery("");
 /*		Resources	res	= getResources();
 		int countDown	= 1000 * res.getInteger(R.integer.splash_delay);
 		_timer = new Timer();
@@ -44,12 +50,13 @@ public class AppSplash extends ApplicaitonActivity {
 			}
 		}, countDown);
 */		
+		}
 	}
 
 	private void launchGallery(String feed) {
 		// Launch default page
 		Intent	galleryIntent	= new Intent(this, GalleryActivity.class);
-		galleryIntent.putExtra(JSON_FEED, feed);
+//		galleryIntent.putExtra(JSON_FEED, feed);
 		startActivity(galleryIntent);
 		
 	}

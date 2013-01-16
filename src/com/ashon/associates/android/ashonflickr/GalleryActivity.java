@@ -14,8 +14,8 @@ public class GalleryActivity extends ApplicaitonActivity {
 		setContentView(R.layout.activity_gallery);
 		
 		// Get the Incoming feed
-		Intent	inIntent	= getIntent();
-		String	rawFeed		= inIntent.getStringExtra(JSON_FEED);
+//		Intent	inIntent	= getIntent();
+//		String	rawFeed		= inIntent.getStringExtra(JSON_FEED);
 //		LoaderManager loaderManager	= getLoaderManager();
 //		loaderManager.initLoader(LISTVIEW_LOADER_ID, savedInstanceState, null);
 	}

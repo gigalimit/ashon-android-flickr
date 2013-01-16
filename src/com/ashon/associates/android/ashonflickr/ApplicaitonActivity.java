@@ -1,11 +1,13 @@
 package com.ashon.associates.android.ashonflickr;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 abstract class ApplicaitonActivity extends Activity {
 	
 	protected 	String 		mApiKey;
-	private 	FlickrApi	flickrApi;
 	protected	String		flickrRes;
 	
 	static final String	JSON_FEED	= "RAW_JSON_FEED";
@@ -29,20 +31,19 @@ abstract class ApplicaitonActivity extends Activity {
 	
 	
 	/**
-	 * @return the flickrApi
-	 */
-	public FlickrApi getFlickrApi() {
-		// If empty create a new one
-		if (null == flickrApi) {
-			flickrApi = new FlickrApi(this.getBaseContext(), getApiKey());
-		}
-		return flickrApi;
-	}
-	/**
 	 * @param flickrApi the flickrApi to set
 	 */
 	public void setFlickrApi(FlickrApi flickrApi) {
 		this.flickrApi = flickrApi;
 	}
 	
+	/**
+	 * 
+	 */
+	public boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager;
+	    connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return (boolean)(activeNetworkInfo != null);
+	}
 }
