@@ -1,8 +1,12 @@
 package com.ashon.associates.android.ashonflickr;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.ashon.associates.android.ashonflickr.FlickrApi.FlickrImage;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -20,6 +24,8 @@ public class AppSplash extends ApplicaitonActivity {
 	}
 
 	private void doSplash() {
+		// Initialize AsyncTask
+		AsyncTask<String, Void, ArrayList<FlickrImage>> asyncTask	= new ImagesDownloaderTask();
 		// Get Flickr Api Obj
 		FlickrApi flickrApiObj	= this.getFlickrApi();
 		// Fetch recent images
