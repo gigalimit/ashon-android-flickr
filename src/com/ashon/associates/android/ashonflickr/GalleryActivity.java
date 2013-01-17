@@ -13,11 +13,28 @@ public class GalleryActivity extends ApplicaitonActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gallery);
 		
+		// Launch the view
+		prepareView();
 		// Get the Incoming feed
 //		Intent	inIntent	= getIntent();
 //		String	rawFeed		= inIntent.getStringExtra(JSON_FEED);
 //		LoaderManager loaderManager	= getLoaderManager();
 //		loaderManager.initLoader(LISTVIEW_LOADER_ID, savedInstanceState, null);
+	}
+
+	/**
+	 * Prepares all the is need for the view
+	 */
+	private void prepareView() {
+		// Check if we have connection otherwise show nothing else
+		if (isNetworkAvailable()){
+			// Inintialize the FlickrObj
+			FlickrApi flickrApi	= getFlickrApi(this);
+		} else {
+			// Network is not available let's notify use and 
+			// show empty screen!
+		}
+		
 	}
 
 	/* (non-Javadoc)

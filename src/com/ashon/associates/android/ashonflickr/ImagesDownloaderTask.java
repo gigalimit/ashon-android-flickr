@@ -23,6 +23,7 @@ public class ImagesDownloaderTask extends AsyncTask<String, Void, ArrayList<Flic
 			for(int i = 0; i < params.length; i++) {
 				System.out.println("Param:=========\n"+params[i]);
 				System.out.println(count++);
+//				FlickrApi flickrApiObj	= new ;
 			}
 		}
 		return null;

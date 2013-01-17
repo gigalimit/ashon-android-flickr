@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 
 abstract class ApplicaitonActivity extends Activity {
 	
+	private 	FlickrApi	flickrApi;
 	protected 	String 		mApiKey;
 	protected	String		flickrRes;
 	
@@ -16,9 +17,6 @@ abstract class ApplicaitonActivity extends Activity {
 	 * @return the mApiKey
 	 */
 	public String getApiKey() {
-		if (null == mApiKey) {
-			mApiKey = "f1e09c524cdda2a4613f8888b678b53b"; // Used temporarily
-		}
 		return mApiKey;
 	}
 	
@@ -31,10 +29,16 @@ abstract class ApplicaitonActivity extends Activity {
 	
 	
 	/**
-	 * @param flickrApi the flickrApi to set
+	 * Gets the fickrApi
 	 */
-	public void setFlickrApi(FlickrApi flickrApi) {
-		this.flickrApi = flickrApi;
+	public FlickrApi getFlickrApi(Context context) {
+		if (null == flickrApi) {
+			if (null != context){
+				String apiKey 	= (String) context.getResources().getString(R.string.api_key);
+				this.flickrApi 	= (FlickrApi) FlickrApi.getInstance().init(context, apiKey);
+			}
+		}
+		return flickrApi;
 	}
 	
 	/**
@@ -44,6 +48,6 @@ abstract class ApplicaitonActivity extends Activity {
 	    ConnectivityManager connectivityManager;
 	    connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-	    return (boolean)(activeNetworkInfo != null);
+	    return (boolean)(activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
 	}
 }

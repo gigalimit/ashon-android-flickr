@@ -19,6 +19,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.widget.Toast;
 
 public class FlickrApi 
@@ -116,16 +117,23 @@ public class FlickrApi
 	 */
 	protected	static FlickrApi		instance;
 	
-	protected	Context			context;
-	protected 	String 			mApiKey	= "";
+	protected	Context			mContext;
+	protected 	String 			mApiKey			= "";
 	protected	HttpPost		mhttpPost;
 	protected	HttpResponse	mhttpResponse;
+	protected	String			mFeedFormat		= "";
+	
+
 	// The array of our image class
 	protected	ArrayList<FlickrImage> imagesArray	= new ArrayList<FlickrApi.FlickrImage>(1);
 	
 	final static String FLICKR_SERVICE_ENDPOINT	= "http://api.flickr.com/services/rest";
 	final static String FLICKR_RECENT_IMAGES		= "flickr.photos.getRecent";
 	final static String FLICKR_SEARCH_IMAGES		= "flickr.photos.search";
+	
+	final static String FLICKR_FEED_TYPE_JSON		= "json";
+	final static String FLICKR_FEED_TYPE_XML		= "xml";
+	final static String FLICKR_FEED_TYPE_SERIAL		= "php_serial";
 	/**
 	 * sizes canblog="1" canprint="1" candownload="1">
   <size label="Square" width="75" height="75" source="http://farm2.staticflickr.com/1103/567229075_2cf8456f01_s.jpg" url="http://www.flickr.com/photos/stewart/567229075/sizes/sq/" media="photo" />
@@ -144,7 +152,7 @@ public class FlickrApi
 	/**
 	 * Gaurd against class instantiation
 	 */
-	protected FlickrApi(){}
+	protected FlickrApi(){ }
 	/**
 	 * Singleton Instance
 	 * @return	self
@@ -162,25 +170,39 @@ public class FlickrApi
 	 * @param String API Key
 	 * @return boolean True on success
 	 */
-	public boolean init(Context context) {
+	public FlickrApi init(Context context, String apiKey) {
 		// Store the context
 		this.setContext(context);
+		// Store the API key
+		if (!apiKey.equals("")) {
+			setApiKey(apiKey);
+		} else {
+			throw new ExceptionInInitializerError("Empty API Key provided!");
+		}
 
-		return true;
+		return this;
+	}
+	
+	public String getmFeedFormat() {
+		return mFeedFormat;
+	}
+	
+	public void setmFeedFormat(String mFeedFormat) {
+		this.mFeedFormat = mFeedFormat;
 	}
 	
 	/**
 	 * @return the context
 	 */
 	public Context getContext() {
-		return context;
+		return mContext;
 	}
 
 	/**
 	 * @param context the context to set
 	 */
 	public void setContext(Context context) {
-		this.context = context;
+		this.mContext = context;
 	}
 
 	
@@ -261,9 +283,9 @@ public class FlickrApi
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			if (this.context != null) {
+			if (this.mContext != null) {
 				Toast.makeText(
-					this.context,
+					this.mContext,
 					"Failed to access '"+url+"'. Please check your connection",
 					Toast.LENGTH_LONG
 				).show();
@@ -285,12 +307,13 @@ public class FlickrApi
 	 * Reads the latest images public available
 	 * @return String
 	 */
-	public String getTopImages()
+	public String getTopImagesFeed()
 	{
 		ArrayList<NameValuePair> params	= new ArrayList<NameValuePair>(1);
 		
 		// Add the required params
 		params.add(new BasicNameValuePair("api_key", getApiKey()));
+		params.add(new BasicNameValuePair("method", FLICKR_RECENT_IMAGES));
 		params.add(new BasicNameValuePair("method", FLICKR_RECENT_IMAGES));
 		
 		// Return result
@@ -307,5 +330,9 @@ public class FlickrApi
 		return true;
 	}
 	
+//	protected Object getMainClass()
+//	{
+//		PackageManager.get;
+//	}
 
 }
