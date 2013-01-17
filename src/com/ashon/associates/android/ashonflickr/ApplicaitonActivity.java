@@ -34,8 +34,8 @@ abstract class ApplicaitonActivity extends Activity {
 	public FlickrApi getFlickrApi(Context context) {
 		if (null == flickrApi) {
 			if (null != context){
-				String apiKey 	= (String) context.getResources().getString(R.string.api_key);
-				this.flickrApi 	= (FlickrApi) FlickrApi.getInstance().init(context, apiKey);
+				String apiKey 	= context.getResources().getString(R.string.api_key);
+				this.flickrApi 	= FlickrApi.getInstance().init(context, apiKey);
 			}
 		}
 		return flickrApi;
@@ -48,6 +48,6 @@ abstract class ApplicaitonActivity extends Activity {
 	    ConnectivityManager connectivityManager;
 	    connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-	    return (boolean)(activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 }

@@ -1,13 +1,11 @@
 package com.ashon.associates.android.ashonflickr;
 
-import android.app.LoaderManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.Toast;
 
 public class GalleryActivity extends ApplicaitonActivity {
 	final static int LISTVIEW_LOADER_ID	= 200;
+	String	pixFeed					 	= "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,8 +26,14 @@ public class GalleryActivity extends ApplicaitonActivity {
 	private void prepareView() {
 		// Check if we have connection otherwise show nothing else
 		if (isNetworkAvailable()){
-			// Inintialize the FlickrObj
+			// Initialize the FlickrObj
 			FlickrApi flickrApi	= getFlickrApi(this);
+			
+			// Get feed of most recent pictures...
+			if (pixFeed.equals("")) {
+				pixFeed	= flickrApi.getTopImagesFeed();
+			}
+			System.out.println(pixFeed);
 		} else {
 			// Network is not available let's notify use and 
 			// show empty screen!

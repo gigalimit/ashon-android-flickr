@@ -19,7 +19,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.widget.Toast;
 
 public class FlickrApi 
@@ -121,7 +120,11 @@ public class FlickrApi
 	protected 	String 			mApiKey			= "";
 	protected	HttpPost		mhttpPost;
 	protected	HttpResponse	mhttpResponse;
-	protected	String			mFeedFormat		= "";
+	
+	// Private Vars
+	private	String			mFeedFormat			= "";
+	private	String			mFeedExtras			= "description,license,owner_name,date_upload, date_taken,url_n,url_o";
+	private	boolean			mbNoJsonCallback	= true;
 	
 
 	// The array of our image class
@@ -131,9 +134,11 @@ public class FlickrApi
 	final static String FLICKR_RECENT_IMAGES		= "flickr.photos.getRecent";
 	final static String FLICKR_SEARCH_IMAGES		= "flickr.photos.search";
 	
-	final static String FLICKR_FEED_TYPE_JSON		= "json";
-	final static String FLICKR_FEED_TYPE_XML		= "xml";
-	final static String FLICKR_FEED_TYPE_SERIAL		= "php_serial";
+	final static String FLICKR_FEED_TYPE_JSON				= "json";
+	final static String FLICKR_FEED_TYPE_XML				= "xml";
+	final static String FLICKR_FEED_TYPE_SERIAL				= "php_serial";
+	/** FEED OPTIONS */
+	final static String FLICKR_FEED_OPTION_NO_JSON_FBACK	= "nojsoncallback";
 	/**
 	 * sizes canblog="1" canprint="1" candownload="1">
   <size label="Square" width="75" height="75" source="http://farm2.staticflickr.com/1103/567229075_2cf8456f01_s.jpg" url="http://www.flickr.com/photos/stewart/567229075/sizes/sq/" media="photo" />
@@ -183,14 +188,30 @@ public class FlickrApi
 		return this;
 	}
 	
-	public String getmFeedFormat() {
+	public String getFeedFormat() {
+		if (mFeedFormat.equals("")) {
+			// Assume JSON
+			setFeedFormat(FLICKR_FEED_TYPE_JSON);
+		}
 		return mFeedFormat;
 	}
 	
-	public void setmFeedFormat(String mFeedFormat) {
-		this.mFeedFormat = mFeedFormat;
+	public void setFeedFormat(String feedFormat) {
+		this.mFeedFormat = feedFormat;
 	}
 	
+	/**
+	 * @return the mFeedExtras
+	 */
+	public String getFeedExtras() {
+		return mFeedExtras;
+	}
+	/**
+	 * @param mFeedExtras the mFeedExtras to set
+	 */
+	public void setFeedExtras(String mFeedExtras) {
+		this.mFeedExtras = mFeedExtras;
+	}
 	/**
 	 * @return the context
 	 */
@@ -291,6 +312,7 @@ public class FlickrApi
 				).show();
 			}
 			e.printStackTrace();
+			return "";
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -314,7 +336,11 @@ public class FlickrApi
 		// Add the required params
 		params.add(new BasicNameValuePair("api_key", getApiKey()));
 		params.add(new BasicNameValuePair("method", FLICKR_RECENT_IMAGES));
-		params.add(new BasicNameValuePair("method", FLICKR_RECENT_IMAGES));
+		params.add(new BasicNameValuePair("format", getFeedFormat()));
+		params.add(new BasicNameValuePair("extras", getFeedExtras()));
+		if (mbNoJsonCallback) {
+			params.add(new BasicNameValuePair(FLICKR_FEED_OPTION_NO_JSON_FBACK, "1"));
+		}
 		
 		// Return result
 		return doPost(FLICKR_SERVICE_ENDPOINT, params);
